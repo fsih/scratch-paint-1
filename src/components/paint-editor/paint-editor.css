@@ -72,7 +72,7 @@ $border-radius: 0.25rem;
     width: 503px;
     height: 403px;
     border: 1px solid #e8edf1;
-    border-radius: .25rem;
+    /*border-radius: .25rem;*/
     position: relative;
     overflow: visible;
 }

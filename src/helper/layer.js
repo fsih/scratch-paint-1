@@ -46,26 +46,26 @@ const _makeBackgroundGuideLayer = function () {
         }
     }
 
-    const vLine = new paper.Path.Line(new paper.Point(0, -7), new paper.Point(0, 7));
-    vLine.strokeWidth = 2;
-    vLine.strokeColor = '#ccc';
-    vLine.position = paper.view.center;
-    vLine.guide = true;
-    vLine.locked = true;
+    // const vLine = new paper.Path.Line(new paper.Point(0, -7), new paper.Point(0, 7));
+    // vLine.strokeWidth = 2;
+    // vLine.strokeColor = '#ccc';
+    // vLine.position = paper.view.center;
+    // vLine.guide = true;
+    // vLine.locked = true;
 
-    const hLine = new paper.Path.Line(new paper.Point(-7, 0), new paper.Point(7, 0));
-    hLine.strokeWidth = 2;
-    hLine.strokeColor = '#ccc';
-    hLine.position = paper.view.center;
-    hLine.guide = true;
-    hLine.locked = true;
+    // const hLine = new paper.Path.Line(new paper.Point(-7, 0), new paper.Point(7, 0));
+    // hLine.strokeWidth = 2;
+    // hLine.strokeColor = '#ccc';
+    // hLine.position = paper.view.center;
+    // hLine.guide = true;
+    // hLine.locked = true;
 
-    const circle = new paper.Shape.Circle(new paper.Point(0, 0), 5);
-    circle.strokeWidth = 2;
-    circle.strokeColor = '#ccc';
-    circle.position = paper.view.center;
-    circle.guide = true;
-    circle.locked = true;
+    // const circle = new paper.Shape.Circle(new paper.Point(0, 0), 5);
+    // circle.strokeWidth = 2;
+    // circle.strokeColor = '#ccc';
+    // circle.position = paper.view.center;
+    // circle.guide = true;
+    // circle.locked = true;
 
     guideLayer.data.isBackgroundGuideLayer = true;
     guideLayer.sendToBack();
