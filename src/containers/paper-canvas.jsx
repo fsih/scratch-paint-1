@@ -84,34 +84,64 @@ class PaperCanvas extends React.Component {
     convertToBitmap () {
         // @todo if the active layer contains only rasters, drawing them directly to the raster layer
         // would be more efficient.
-        // Export svg
-        const guideLayers = hideGuideLayers(true /* includeRaster */);
-        const bounds = paper.project.activeLayer.bounds;
-        const svg = paper.project.exportSVG({
-            bounds: 'content',
-            matrix: new paper.Matrix().translate(-bounds.x, -bounds.y)
-        });
-        showGuideLayers(guideLayers);
-        
-        // Get rid of anti-aliasing
-        // @todo get crisp text?
-        svg.setAttribute('shape-rendering', 'crispEdges');
-        const svgString = (new XMLSerializer()).serializeToString(svg);
 
-        // Put anti-aliased SVG into image, and dump image back into canvas
-        const img = new Image();
-        img.onload = () => {
-            const raster = new paper.Raster(img);
-            raster.onLoad = () => {
-                const subCanvas = raster.canvas;
-                getRaster().drawImage(
-                    subCanvas,
-                    new paper.Point(Math.floor(bounds.topLeft.x), Math.floor(bounds.topLeft.y)));
-                paper.project.activeLayer.removeChildren();
-                this.props.onUpdateSvg();
-            };
-        };
-        img.src = `data:image/svg+xml;charset=utf-8,${svgString}`;
+        // const raster = paper.project.activeLayer.rasterize(72, false /* insert */);
+        // raster.onLoad = function () {
+        //     const subCanvas = raster.canvas;
+        //     getRaster().drawImage(subCanvas, raster.bounds.topLeft);
+        // };
+        const raster = this.rasterize();
+        if (raster) {
+            const subCanvas = raster.canvas;
+            getRaster().drawImage(subCanvas, raster.bounds.topLeft);
+        }
+
+        paper.project.activeLayer.removeChildren();
+        performSnapshot(this.props.undoSnapshot);
+    }
+    rasterize () {
+        const bounds = paper.project.activeLayer.getStrokeBounds(),
+            scale = paper.view.getResolution() / 72,
+            // Floor top-left corner and ceil bottom-right corner, to never
+            // blur or cut pixels.
+            topLeft = bounds.getTopLeft().floor(),
+            bottomRight = bounds.getBottomRight().ceil(),
+            size = new paper.Size(bottomRight.subtract(topLeft)),
+            raster = new paper.Raster(paper.Item.NO_INSERT);
+        if (!size.isZero()) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size.width * scale;
+            canvas.height = size.height * scale;
+            const context = canvas.getContext('2d');
+            for (let x = topLeft.x; x < bottomRight.x; x++) {
+                for (let y = topLeft.y; y < bottomRight.y; y++) {
+                    const hitResult = paper.project.hitTest(new paper.Point(x + .5, y + .5), {
+                        segments: false,
+                        stroke: true,
+                        curves: false,
+                        handles: false,
+                        fill: true,
+                        guide: false,
+                        tolerance: 0
+                    });
+                    if (!hitResult) continue;
+                    if (hitResult.type === 'stroke') {
+                        //raster.setPixel(x - topLeft.x, y - topLeft.y, hitResult.item.strokeColor);
+                        context.fillStyle = hitResult.item.strokeColor.toCSS();
+                        context.fillRect(x - topLeft.x, y - topLeft.y, 1, 1);
+                    }
+                    if (hitResult.type === 'fill') {
+                        //raster.setPixel(x - topLeft.x, y - topLeft.y, hitResult.item.fillColor);
+                        context.fillStyle = hitResult.item.fillColor.toCSS();
+                        context.fillRect(x - topLeft.x, y - topLeft.y, 1, 1);
+                    }
+                }
+            }
+            raster.setCanvas(canvas);
+            raster.bounds.topLeft = topLeft;
+            return raster;
+        }
+        return null;
     }
     convertToVector () {
         this.props.clearSelectedItems();
