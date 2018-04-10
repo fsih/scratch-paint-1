@@ -122,7 +122,15 @@ class PaperCanvas extends React.Component {
                         handles: false,
                         fill: true,
                         guide: false,
-                        tolerance: 0
+                        tolerance: 0,
+                        match: function (hit) {
+                            if (hit.type === 'stroke' && (!hit.item.strokeColor || !hit.item.strokeColor.toCSS)) {
+                                return false;
+                            } else if (hit.type === 'fill' && (!hit.item.fillColor || !hit.item.fillColor.toCSS)) {
+                                return false;
+                            }
+                            return true;
+                        }
                     });
                     if (!hitResult) continue;
                     if (hitResult.type === 'stroke') {
