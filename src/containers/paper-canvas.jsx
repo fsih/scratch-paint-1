@@ -6,12 +6,13 @@ import paper from '@scratch/paper';
 import Formats from '../lib/format';
 import Modes from '../lib/modes';
 import log from '../log/log';
+import GPU from 'gpu.js';
 
 import {trim} from '../helper/bitmap';
 import {performSnapshot} from '../helper/undo';
 import {undoSnapshot, clearUndoState} from '../reducers/undo';
 import {isGroup, ungroupItems} from '../helper/group';
-import {clearRaster, getRaster, setupLayers, hideGuideLayers, showGuideLayers} from '../helper/layer';
+import {clearRaster, getRaster, setupLayers} from '../helper/layer';
 import {deleteSelection, getSelectedLeafItems} from '../helper/selection';
 import {clearSelectedItems, setSelectedItems} from '../reducers/selected-items';
 import {pan, resetZoom, zoomOnFixedPoint} from '../helper/view';
@@ -109,43 +110,55 @@ class PaperCanvas extends React.Component {
             size = new paper.Size(bottomRight.subtract(topLeft)),
             raster = new paper.Raster(paper.Item.NO_INSERT);
         if (!size.isZero()) {
+            const width = bottomRight.x - topLeft.x;
+            const height = bottomRight.y - topLeft.y;
+
             const canvas = document.createElement('canvas');
-            canvas.width = size.width * scale;
-            canvas.height = size.height * scale;
-            const context = canvas.getContext('2d');
-            for (let x = topLeft.x; x < bottomRight.x; x++) {
-                for (let y = topLeft.y; y < bottomRight.y; y++) {
-                    const hitResult = paper.project.hitTest(new paper.Point(x + .5, y + .5), {
-                        segments: false,
-                        stroke: true,
-                        curves: false,
-                        handles: false,
-                        fill: true,
-                        guide: false,
-                        tolerance: 0,
-                        match: function (hit) {
-                            if (hit.type === 'stroke' && (!hit.item.strokeColor || !hit.item.strokeColor.toCSS)) {
-                                return false;
-                            } else if (hit.type === 'fill' && (!hit.item.fillColor || !hit.item.fillColor.toCSS)) {
-                                return false;
-                            }
-                            return true;
-                        }
-                    });
-                    if (!hitResult) continue;
-                    if (hitResult.type === 'stroke') {
-                        //raster.setPixel(x - topLeft.x, y - topLeft.y, hitResult.item.strokeColor);
-                        context.fillStyle = hitResult.item.strokeColor.toCSS();
-                        context.fillRect(x - topLeft.x, y - topLeft.y, 1, 1);
-                    }
-                    if (hitResult.type === 'fill') {
-                        //raster.setPixel(x - topLeft.x, y - topLeft.y, hitResult.item.fillColor);
-                        context.fillStyle = hitResult.item.fillColor.toCSS();
-                        context.fillRect(x - topLeft.x, y - topLeft.y, 1, 1);
-                    }
-                }
-            }
-            raster.setCanvas(canvas);
+            canvas.width = width;
+            canvas.height = height;
+            const gl = canvas.getContext('webgl2', {premultipliedAlpha: false});
+
+            const gpu = new GPU({
+                canvas,
+                webGl: gl
+            });
+
+            const render = gpu.createKernel(function () {
+                const dx = this.thread.x;
+                const dy = this.thread.y;
+                // point.set(topLeft.x + dx + .5, topLeft.y + dy + .5);
+                // const hitResult = paper.project.hitTest(point, hitOptions);
+                // if (hitResult && hitResult.type === 'stroke') {
+                //     const color = hitResult.item.strokeColor;
+                //     this.color(color.r, color.g, color.b, color.a);
+                // }
+                // if (hitResult && hitResult.type === 'fill') {
+                //     const color = hitResult.item.fillColor;
+                //     this.color(color.r, color.g, color.b, color.a);
+                // }
+                this.color(dx % 2, dy % 2, 1, 1);
+            }).setOutput([width, height])
+            .setGraphical(true);
+            render();
+            // render(topLeft, new paper.Point(),
+            //     {
+            //         segments: false,
+            //         stroke: true,
+            //         curves: false,
+            //         handles: false,
+            //         fill: true,
+            //         guide: false,
+            //         tolerance: 0,
+            //         match: function (hit) {
+            //             if (hit.type === 'stroke' && (!hit.item.strokeColor || !hit.item.strokeColor.toCSS)) {
+            //                 return false;
+            //             } else if (hit.type === 'fill' && (!hit.item.fillColor || !hit.item.fillColor.toCSS)) {
+            //                 return false;
+            //             }
+            //             return true;
+            //         }
+            //     });
+            raster.setCanvas(render.getCanvas());
             raster.bounds.topLeft = topLeft;
             return raster;
         }
