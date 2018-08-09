@@ -49,7 +49,7 @@ const _ungroupLoop = function (group, recursive, setSelectedItems) {
     // iterate over group children recursively
     for (let i = 0; i < group.children.length; i++) {
         let groupChild = group.children[i];
-        if (groupChild instanceof paper.Group && groupChild.hasChildren()) {
+        if (groupChild instanceof paper.Group && !groupChild.clipped && groupChild.hasChildren()) {
             // recursion (groups can contain groups, ie. from SVG import)
             if (recursive) {
                 _ungroupLoop(groupChild, recursive, setSelectedItems);
@@ -86,7 +86,7 @@ const ungroupItems = function (items, setSelectedItems, onUpdateImage) {
     const emptyGroups = [];
     for (let i = 0; i < items.length; i++) {
         const item = items[i];
-        if (isGroup(item) && !item.data.isPGTextItem) {
+        if (isGroup(item) && !item.data.isPGTextItem && !item.clipped) {
             _ungroupLoop(item, false /* recursive */, setSelectedItems);
 
             if (!item.hasChildren()) {

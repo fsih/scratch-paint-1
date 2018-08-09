@@ -8,6 +8,7 @@ import parseColor from 'parse-color';
 import {DEFAULT_COLOR} from '../reducers/fill-color';
 
 const MIXED = 'scratch-paint/style-path/mixed';
+const BANANA = 'scratch-paint/style-path/BANANA';
 
 // Check if the item color matches the incoming color. If the item color is a gradient, we assume
 // that the incoming color never matches, since we don't support gradients yet.
@@ -537,6 +538,7 @@ export {
     getColorsFromSelection,
     getRotatedColor,
     MIXED,
+    BANANA,
     styleBlob,
     styleShape,
     stylePath,

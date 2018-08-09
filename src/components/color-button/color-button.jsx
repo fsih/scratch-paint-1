@@ -2,16 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import {MIXED} from '../../helper/style-path';
+import {MIXED, BANANA} from '../../helper/style-path';
 
 import noFillIcon from './no-fill.svg';
 import mixedFillIcon from './mixed-fill.svg';
+import bananaIcon from '../color-picker/icons/banana.svg';
 import styles from './color-button.css';
 import GradientTypes from '../../lib/gradient-types';
 import log from '../../log/log';
 
 const colorToBackground = (color, color2, gradientType) => {
     if (color === MIXED || color2 === MIXED) return 'white';
+    if (color === BANANA) return 'white';
     if (color === null) color = 'white';
     if (color2 === null) color2 = 'white';
     switch (gradientType) {
@@ -47,6 +49,12 @@ const ColorButtonComponent = props => (
                     className={styles.swatchIcon}
                     draggable={false}
                     src={mixedFillIcon}
+                />
+            ) : props.color === BANANA ? (
+                <img
+                    className={styles.swatchIcon}
+                    draggable={false}
+                    src={bananaIcon}
                 />
             ) : null))}
         </div>

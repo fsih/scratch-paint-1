@@ -21,7 +21,8 @@ import {applyFillColorToSelection,
     applyGradientTypeToSelection,
     getRotatedColor,
     swapColorsInSelection,
-    MIXED} from '../helper/style-path';
+    MIXED,
+    BANANA} from '../helper/style-path';
 
 class FillColorIndicator extends React.Component {
     constructor (props) {
@@ -134,7 +135,12 @@ const mapDispatchToProps = dispatch => ({
         dispatch(changeColorIndex(index));
     },
     onChangeFillColor: (fillColor, index) => {
-        if (index === 0) {
+        if (fillColor === BANANA) {
+            // BANANA overrides gradient
+            dispatch(changeGradientType(GradientTypes.SOLID));
+            dispatch(changeColorIndex(0));
+            dispatch(changeFillColor(fillColor));
+        } else if (index === 0) {
             dispatch(changeFillColor(fillColor));
         } else if (index === 1) {
             dispatch(changeFillColor2(fillColor));

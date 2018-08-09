@@ -9,7 +9,7 @@ import Slider from '../forms/slider.jsx';
 import LabeledIconButton from '../labeled-icon-button/labeled-icon-button.jsx';
 import styles from './color-picker.css';
 import GradientTypes from '../../lib/gradient-types';
-import {MIXED} from '../../helper/style-path';
+import {MIXED, BANANA} from '../../helper/style-path';
 
 import eyeDropperIcon from './icons/eye-dropper.svg';
 import noFillIcon from '../color-button/no-fill.svg';
@@ -19,6 +19,7 @@ import fillRadialIcon from './icons/fill-radial-enabled.svg';
 import fillSolidIcon from './icons/fill-solid-enabled.svg';
 import fillVertGradientIcon from './icons/fill-vert-gradient-enabled.svg';
 import swapIcon from './icons/swap.svg';
+import bananaIcon from './icons/banana.svg';
 
 const hsvToHex = (h, s, v) =>
     // Scale hue back up to [0, 360] from [0, 100]
@@ -257,6 +258,24 @@ class ColorPickerComponent extends React.Component {
                             className={classNames({
                                 [styles.clickable]: true,
                                 [styles.swatch]: true,
+                                [styles.activeSwatch]:
+                                    (this.props.colorIndex === 0 && this.props.color === BANANA) ||
+                                    (this.props.colorIndex === 1 && this.props.color2 === BANANA)
+                            })}
+                            onClick={this.props.onBanana}
+                        >
+                            <img
+                                className={styles.swatchIcon}
+                                draggable={false}
+                                src={bananaIcon}
+                            />
+                        </div>
+                    </div>
+                    <div className={styles.swatches}>
+                        <div
+                            className={classNames({
+                                [styles.clickable]: true,
+                                [styles.swatch]: true,
                                 [styles.activeSwatch]: this.props.isEyeDropping
                             })}
                             onClick={this.props.onActivateEyeDropper}
@@ -284,6 +303,7 @@ ColorPickerComponent.propTypes = {
     intl: intlShape.isRequired,
     isEyeDropping: PropTypes.bool.isRequired,
     onActivateEyeDropper: PropTypes.func.isRequired,
+    onBanana: PropTypes.func.isRequired,
     onBrightnessChange: PropTypes.func.isRequired,
     onChangeGradientTypeHorizontal: PropTypes.func.isRequired,
     onChangeGradientTypeRadial: PropTypes.func.isRequired,

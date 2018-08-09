@@ -11,7 +11,7 @@ import {activateEyeDropper} from '../reducers/eye-dropper';
 import GradientTypes from '../lib/gradient-types';
 
 import ColorPickerComponent from '../components/color-picker/color-picker.jsx';
-import {MIXED} from '../helper/style-path';
+import {MIXED, BANANA} from '../helper/style-path';
 
 const colorStringToHsv = hexString => {
     const hsv = parseColor(hexString).hsv;
@@ -46,6 +46,7 @@ class ColorPicker extends React.Component {
             'handleSaturationChange',
             'handleBrightnessChange',
             'handleTransparent',
+            'handleBanana',
             'handleActivateEyeDropper'
         ]);
 
@@ -72,7 +73,7 @@ class ColorPicker extends React.Component {
     }
     getHsv (color) {
         const isTransparent = color === null;
-        const isMixed = color === MIXED;
+        const isMixed = color === MIXED || color === BANANA;
         return isTransparent || isMixed ?
             [50, 100, 100] : colorStringToHsv(color);
     }
@@ -100,6 +101,9 @@ class ColorPicker extends React.Component {
     }
     handleTransparent () {
         this.props.onChangeColor(null);
+    }
+    handleBanana () {
+        this.props.onChangeColor(BANANA);
     }
     handleActivateEyeDropper () {
         this.props.onActivateEyeDropper(
@@ -132,6 +136,7 @@ class ColorPicker extends React.Component {
                 saturation={this.state.saturation}
                 shouldShowGradientTools={this.props.shouldShowGradientTools}
                 onActivateEyeDropper={this.handleActivateEyeDropper}
+                onBanana={this.handleBanana}
                 onBrightnessChange={this.handleBrightnessChange}
                 onChangeGradientTypeHorizontal={this.handleChangeGradientTypeHorizontal}
                 onChangeGradientTypeRadial={this.handleChangeGradientTypeRadial}

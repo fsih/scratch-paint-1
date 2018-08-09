@@ -1,8 +1,10 @@
 import paper from '@scratch/paper';
 import {getHoveredItem} from '../hover';
 import {expandBy} from '../math';
-import {createGradientObject} from '../style-path';
+import {createGradientObject, BANANA} from '../style-path';
+import {createCanvas} from '../layer';
 import GradientTypes from '../../lib/gradient-types';
+import bananaSwatch from './banana-swatch.png';
 
 class FillTool extends paper.Tool {
     static get TOLERANCE () {
@@ -90,7 +92,8 @@ class FillTool extends paper.Tool {
         }
         const hitItem = hoveredItem ? hoveredItem.data.origItem : null;
         // Still hitting the same thing
-        if ((!hitItem && !this.fillItem) || this.fillItem === hitItem) {
+        if ((!hitItem && !this.fillItem) || this.fillItem === hitItem ||
+            (hitItem && hitItem.parent && this.fillItem === hitItem.parent)) {
             // Only radial gradient needs to be updated
             if (this.gradientType === GradientTypes.RADIAL) {
                 this._setFillItemColor(this.fillColor, this.fillColor2, this.gradientType, event.point);
@@ -176,9 +179,41 @@ class FillTool extends paper.Tool {
     // Either pass in a fully defined paper.Color as color1,
     // or pass in 2 color strings, a gradient type, and a pointer location
     _setFillItemColor (color1, color2, gradientType, pointerLocation) {
-        const item = this._getFillItem();
+        let item = this._getFillItem();
         if (!item) return;
-        if (color1 instanceof paper.Color || gradientType === GradientTypes.SOLID) {
+        if (item instanceof paper.Group && item.clipped) {
+            const group = item;
+            group.clipped = false;
+            this.fillItem = item = item.children[0];
+            item.insertAbove(group);
+            group.remove();
+        }
+        if (color1 === BANANA) {
+            const canvas = createCanvas(item.bounds.width, item.bounds.height);
+            const context = canvas.getContext('2d');
+            const img = new Image();
+            img.src = bananaSwatch;
+            img.onload = function () {
+                context.fillStyle = context.createPattern(this, 'repeat');
+                context.fillRect(0, 0, item.bounds.width, item.bounds.height);
+                context.fill();
+            };
+            const raster = new paper.Raster(canvas, new paper.Point(item.bounds.x, item.bounds.y));
+            raster.fitBounds(item.bounds, true);
+            const group = new paper.Group();
+            group.insertAbove(item);
+            group.addChild(item);
+            const tempRect = new paper.Path.Rectangle({
+                from: item.bounds.topLeft,
+                to: item.bounds.bottomRight,
+                fillColor: 'rgb(255, 255, 0)'
+            });
+            raster.onload = () => tempRect.remove();
+            group.addChild(tempRect);
+            group.addChild(raster);
+            group.clipped = true;
+            this.fillItem = group;
+        } else if (color1 instanceof paper.Color || gradientType === GradientTypes.SOLID) {
             item.fillColor = color1;
         } else {
             item.fillColor = createGradientObject(color1, color2, gradientType, item.bounds, pointerLocation);
