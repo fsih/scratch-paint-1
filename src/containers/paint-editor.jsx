@@ -18,7 +18,7 @@ import {setTextEditTarget} from '../reducers/text-edit-target';
 import {updateViewBounds} from '../reducers/view-bounds';
 import {setLayout} from '../reducers/layout';
 
-import {getSelectedLeafItems} from '../helper/selection';
+import {clearSelection, getSelectedLeafItems} from '../helper/selection';
 import {convertToBitmap, convertToVector} from '../helper/bitmap';
 import {resetZoom, zoomOnSelection} from '../helper/view';
 import EyeDropperTool from '../helper/tools/eye-dropper';
@@ -180,6 +180,9 @@ class PaintEditor extends React.Component {
                 this.props.changeMode(Modes.BIT_RECT);
                 break;
             case Modes.TEXT:
+                // Clear selection is needed here to end the text edit state.
+                // The text will be rasterized, so text edit should not be on.
+                clearSelection(this.props.clearSelectedItems);
                 this.props.changeMode(Modes.BIT_TEXT);
                 break;
             case Modes.FILL:
