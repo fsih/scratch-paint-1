@@ -3,7 +3,7 @@ import Modes from '../../lib/modes';
 import {isGroup} from '../group';
 import {isCompoundPathItem, getRootItem} from '../item';
 import {snapDeltaToAngle} from '../math';
-import {ART_BOARD_WIDTH, ART_BOARD_HEIGHT} from '../view';
+import {getActionBounds} from '../view';
 import {clearSelection, cloneSelection, getSelectedLeafItems, getSelectedRootItems, setItemSelection}
     from '../selection';
 
@@ -98,9 +98,12 @@ class MoveTool {
         this.setSelectedItems();
     }
     onMouseDrag (event) {
+        const size = paper.DomElement.getSize(paper.view.element);
         const point = event.point;
-        point.x = Math.max(0, Math.min(point.x, ART_BOARD_WIDTH));
-        point.y = Math.max(0, Math.min(point.y, ART_BOARD_HEIGHT));
+        const bounds = getActionBounds();
+        
+        point.x = Math.max(bounds.left, Math.min(point.x, bounds.right));
+        point.y = Math.max(bounds.top, Math.min(point.y, bounds.bottom));
         const dragVector = point.subtract(event.downPoint);
 
         for (const item of this.selectedItems) {
