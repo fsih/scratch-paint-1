@@ -1,6 +1,6 @@
 import paper from '@scratch/paper';
 import log from '../log/log';
-import {ART_BOARD_WIDTH, ART_BOARD_HEIGHT} from './view';
+import {ART_BOARD_WIDTH, ART_BOARD_HEIGHT, MAX_WORKSPACE_BOUNDS} from './view';
 
 const _getLayer = function (layerString) {
     for (const layer of paper.project.layers) {
@@ -166,6 +166,12 @@ const _makeBackgroundPaper = function (width, height, color) {
 const _makeBackgroundGuideLayer = function () {
     const guideLayer = new paper.Layer();
     guideLayer.locked = true;
+    
+    const vWorkspaceBounds = new paper.Shape.Rectangle(MAX_WORKSPACE_BOUNDS);
+    vWorkspaceBounds.fillColor = '#ECF1F9';
+    vWorkspaceBounds.position = new paper.Point(ART_BOARD_WIDTH / 2, ART_BOARD_HEIGHT / 2);
+    vWorkspaceBounds.guide = true;
+    vWorkspaceBounds.locked = true;
 
     const vBackground = _makeBackgroundPaper(120, 90, '#F9F9F9');
     vBackground.position = new paper.Point(ART_BOARD_WIDTH / 2, ART_BOARD_HEIGHT / 2);
