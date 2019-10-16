@@ -98,7 +98,6 @@ class MoveTool {
         this.setSelectedItems();
     }
     onMouseDrag (event) {
-        const size = paper.DomElement.getSize(paper.view.element);
         const point = event.point;
         const bounds = getActionBounds();
         
