@@ -83,7 +83,7 @@ const hideGuideLayers = function (includeRaster) {
     const backgroundGuideLayer = getBackgroundGuideLayer();
     const dragCrosshairLayer = getDragCrosshairLayer();
     const guideLayer = getGuideLayer();
-    if (dragCrosshairLayer) dragCrosshairLayer.remove();
+    dragCrosshairLayer.remove();
     guideLayer.remove();
     backgroundGuideLayer.remove();
     let rasterLayer;
@@ -178,7 +178,6 @@ const _makeBackgroundPaper = function (width, height, color) {
 
 // Helper function for drawing a crosshair
 const _makeCrosshair = function (opacity, parent) {
-    window.p = paper.project;
     paper.project.importSVG(costumeAnchorIcon, {
         onLoad: function (item) {
             item.position = new paper.Point(ART_BOARD_WIDTH / 2, ART_BOARD_HEIGHT / 2);
