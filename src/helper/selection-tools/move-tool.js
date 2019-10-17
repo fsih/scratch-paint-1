@@ -122,7 +122,7 @@ class MoveTool {
         // Show the center crosshair above the selected item while dragging. This makes it easier to center sprites.
         // Yes, we're calling it once per drag event, but it's better than having the crosshair pop up
         // for a split second every time you click a sprite.
-        getDragCrosshairLayer().opacity = 0.5;
+        getDragCrosshairLayer().visible = true;
     }
     onMouseUp () {
         let moved = false;
@@ -140,7 +140,7 @@ class MoveTool {
         }
 
         // Hide the crosshair we showed earlier.
-        getDragCrosshairLayer().opacity = 0;
+        getDragCrosshairLayer().visible = false;
     }
 }
 
