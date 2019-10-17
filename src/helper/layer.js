@@ -1,6 +1,7 @@
 import paper from '@scratch/paper';
 import log from '../log/log';
 import {ART_BOARD_WIDTH, ART_BOARD_HEIGHT, MAX_WORKSPACE_BOUNDS} from './view';
+import costumeAnchorIcon from './icons/costume-anchor.svg';
 
 const _getLayer = function (layerString) {
     for (const layer of paper.project.layers) {
@@ -50,6 +51,10 @@ const getRaster = function () {
     return _getLayer('isRasterLayer').children[0];
 };
 
+const getDragCrosshairLayer = function () {
+    return _getLayer('isDragCrosshairLayer');
+};
+
 const getBackgroundGuideLayer = function () {
     return _getLayer('isBackgroundGuideLayer');
 };
@@ -76,7 +81,9 @@ const getGuideLayer = function () {
  */
 const hideGuideLayers = function (includeRaster) {
     const backgroundGuideLayer = getBackgroundGuideLayer();
+    const dragCrosshairLayer = getDragCrosshairLayer();
     const guideLayer = getGuideLayer();
+    dragCrosshairLayer.remove();
     guideLayer.remove();
     backgroundGuideLayer.remove();
     let rasterLayer;
@@ -85,6 +92,7 @@ const hideGuideLayers = function (includeRaster) {
         rasterLayer.remove();
     }
     return {
+        dragCrosshairLayer: dragCrosshairLayer,
         guideLayer: guideLayer,
         backgroundGuideLayer: backgroundGuideLayer,
         rasterLayer: rasterLayer
@@ -98,6 +106,7 @@ const hideGuideLayers = function (includeRaster) {
  */
 const showGuideLayers = function (guideLayers) {
     const backgroundGuideLayer = guideLayers.backgroundGuideLayer;
+    const dragCrosshairLayer = guideLayers.dragCrosshairLayer;
     const guideLayer = guideLayers.guideLayer;
     const rasterLayer = guideLayers.rasterLayer;
     if (rasterLayer && !rasterLayer.index) {
@@ -107,6 +116,10 @@ const showGuideLayers = function (guideLayers) {
     if (!backgroundGuideLayer.index) {
         paper.project.addLayer(backgroundGuideLayer);
         backgroundGuideLayer.sendToBack();
+    }
+    if (!dragCrosshairLayer.index) {
+        paper.project.addLayer(dragCrosshairLayer);
+        dragCrosshairLayer.bringToFront();
     }
     if (!guideLayer.index) {
         paper.project.addLayer(guideLayer);
@@ -163,6 +176,28 @@ const _makeBackgroundPaper = function (width, height, color) {
     return vGroup;
 };
 
+// Helper function for drawing a crosshair
+const _makeCrosshair = function (opacity, parent) {
+    window.p = paper.project;
+    paper.project.importSVG(costumeAnchorIcon, {
+        onLoad: function (item) {
+            item.position = new paper.Point(ART_BOARD_WIDTH / 2, ART_BOARD_HEIGHT / 2);
+            item.guide = true;
+            item.locked = true;
+            item.opacity = opacity;
+            item.parent = parent;
+        }
+    });
+};
+
+const _makeDragCrosshairLayer = function () {
+    const dragCrosshairLayer = new paper.Layer();
+    _makeCrosshair(1, dragCrosshairLayer);
+    dragCrosshairLayer.data.isDragCrosshairLayer = true;
+    dragCrosshairLayer.visible = false;
+    return dragCrosshairLayer;
+};
+
 const _makeBackgroundGuideLayer = function () {
     const guideLayer = new paper.Layer();
     guideLayer.locked = true;
@@ -179,26 +214,7 @@ const _makeBackgroundGuideLayer = function () {
     vBackground.guide = true;
     vBackground.locked = true;
 
-    const vLine = new paper.Path.Line(new paper.Point(0, -7), new paper.Point(0, 7));
-    vLine.strokeWidth = 2;
-    vLine.strokeColor = '#ccc';
-    vLine.position = new paper.Point(ART_BOARD_WIDTH / 2, ART_BOARD_HEIGHT / 2);
-    vLine.guide = true;
-    vLine.locked = true;
-
-    const hLine = new paper.Path.Line(new paper.Point(-7, 0), new paper.Point(7, 0));
-    hLine.strokeWidth = 2;
-    hLine.strokeColor = '#ccc';
-    hLine.position = new paper.Point(ART_BOARD_WIDTH / 2, ART_BOARD_HEIGHT / 2);
-    hLine.guide = true;
-    hLine.locked = true;
-
-    const circle = new paper.Shape.Circle(new paper.Point(0, 0), 5);
-    circle.strokeWidth = 2;
-    circle.strokeColor = '#ccc';
-    circle.position = new paper.Point(ART_BOARD_WIDTH / 2, ART_BOARD_HEIGHT / 2);
-    circle.guide = true;
-    circle.locked = true;
+    _makeCrosshair(0.25, guideLayer);
 
     guideLayer.data.isBackgroundGuideLayer = true;
     return guideLayer;
@@ -208,8 +224,10 @@ const setupLayers = function () {
     const backgroundGuideLayer = _makeBackgroundGuideLayer();
     _makeRasterLayer();
     const paintLayer = _makePaintingLayer();
+    const dragCrosshairLayer = _makeDragCrosshairLayer();
     const guideLayer = _makeGuideLayer();
     backgroundGuideLayer.sendToBack();
+    dragCrosshairLayer.bringToFront();
     guideLayer.bringToFront();
     paintLayer.activate();
 };
@@ -218,6 +236,7 @@ export {
     createCanvas,
     hideGuideLayers,
     showGuideLayers,
+    getDragCrosshairLayer,
     getGuideLayer,
     getBackgroundGuideLayer,
     clearRaster,

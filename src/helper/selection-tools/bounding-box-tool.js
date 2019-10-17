@@ -4,6 +4,7 @@ import keyMirror from 'keymirror';
 import {getSelectedRootItems} from '../selection';
 import {getGuideColor, removeBoundsPath, removeBoundsHandles} from '../guides';
 import {getGuideLayer} from '../layer';
+import selectionAnchorIcon from '../icons/selection-anchor.svg';
 
 import Cursors from '../../lib/cursors';
 import ScaleTool from './scale-tool';
@@ -23,6 +24,7 @@ const BoundingBoxModes = keyMirror({
     ROTATE: null,
     MOVE: null
 });
+let anchorIcon;
 
 /**
  * Tool that handles transforming the selection and drawing a bounding box with handles.
@@ -53,6 +55,16 @@ class BoundingBoxTool {
         this._modeMap[BoundingBoxModes.MOVE] =
             new MoveTool(mode, setSelectedItems, clearSelectedItems, onUpdateImage, switchToTextTool);
         this._currentCursor = null;
+
+        paper.project.importSVG(selectionAnchorIcon, {
+            onLoad: function (item) {
+                anchorIcon = item;
+                item.visible = false;
+                item.parent = getGuideLayer();
+                item.locked = true;
+                item.guide = true;
+            }
+        });
     }
 
     /**
@@ -204,11 +216,16 @@ class BoundingBoxTool {
         }
 
         if (!this.boundsPath) {
-            this.boundsPath = new paper.Path.Rectangle(rect);
-            this.boundsPath.curves[0].divideAtTime(0.5);
-            this.boundsPath.curves[2].divideAtTime(0.5);
-            this.boundsPath.curves[4].divideAtTime(0.5);
-            this.boundsPath.curves[6].divideAtTime(0.5);
+            this.boundsPath = new paper.Group();
+            this.boundsRect = paper.Path.Rectangle(rect);
+            this.boundsRect.curves[0].divideAtTime(0.5);
+            this.boundsRect.curves[2].divideAtTime(0.5);
+            this.boundsRect.curves[4].divideAtTime(0.5);
+            this.boundsRect.curves[6].divideAtTime(0.5);
+            this.boundsPath.addChild(this.boundsRect);
+            if (anchorIcon) {
+                this.boundsPath.addChild(anchorIcon);
+            }
             this._modeMap[BoundingBoxModes.MOVE].setBoundsPath(this.boundsPath);
         }
         this.boundsPath.guide = true;
@@ -218,6 +235,11 @@ class BoundingBoxTool {
         this.boundsPath.parent = getGuideLayer();
         this.boundsPath.strokeWidth = 1 / paper.view.zoom;
         this.boundsPath.strokeColor = getGuideColor();
+
+        if (anchorIcon) {
+            anchorIcon.visible = true;
+            anchorIcon.position = rect.center;
+        }
 
         // Make a template to copy
         const boundsScaleCircleShadow =
@@ -247,8 +269,8 @@ class BoundingBoxTool {
         const boundsScaleHandle = new paper.Group([boundsScaleCircleShadow, boundsScaleCircle]);
         boundsScaleHandle.parent = getGuideLayer();
 
-        for (let index = 0; index < this.boundsPath.segments.length; index++) {
-            const segment = this.boundsPath.segments[index];
+        for (let index = 0; index < this.boundsRect.segments.length; index++) {
+            const segment = this.boundsRect.segments[index];
 
             if (index === 7) {
                 const offset = new paper.Point(0, 20);
@@ -295,8 +317,12 @@ class BoundingBoxTool {
     removeBoundsPath () {
         removeBoundsPath();
         this.boundsPath = null;
+        this.boundsRect = null;
         this.boundsScaleHandles.length = 0;
         this.boundsRotHandles.length = 0;
+        if (anchorIcon) {
+            anchorIcon.visible = false;
+        }
     }
     removeBoundsHandles () {
         removeBoundsHandles();

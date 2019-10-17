@@ -6,7 +6,7 @@ import {snapDeltaToAngle} from '../math';
 import {getActionBounds} from '../view';
 import {clearSelection, cloneSelection, getSelectedLeafItems, getSelectedRootItems, setItemSelection}
     from '../selection';
-
+import {getDragCrosshairLayer} from '../layer';
 /**
  * Tool to handle dragging an item to reposition it in a selection mode.
  */
@@ -70,6 +70,8 @@ class MoveTool {
         if (this.boundsPath) {
             this.selectedItems.push(this.boundsPath);
         }
+
+        
     }
     setBoundsPath (boundsPath) {
         this.boundsPath = boundsPath;
@@ -118,6 +120,11 @@ class MoveTool {
                 item.position = item.data.origPos.add(dragVector);
             }
         }
+
+        // Show the center crosshair above the selected item while dragging. This makes it easier to center sprites.
+        // Yes, we're calling it once per drag event, but it's better than having the crosshair pop up
+        // for a split second every time you click a sprite.
+        getDragCrosshairLayer().visible = true;
     }
     onMouseUp () {
         let moved = false;
@@ -133,6 +140,9 @@ class MoveTool {
         if (moved) {
             this.onUpdateImage();
         }
+
+        // Hide the crosshair we showed earlier.
+        getDragCrosshairLayer().visible = false;
     }
 }
 
