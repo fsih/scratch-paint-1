@@ -1,6 +1,6 @@
 import paper from '@scratch/paper';
 import {getAllRootItems, getSelectedRootItems} from './selection';
-import {getRaster} from './layer';
+import {getBackgroundGuideLayer, getDragCrosshairLayer, getRaster} from './layer';
 import {getHitBounds} from './bitmap';
 
 // Vectors are imported and exported at SVG_ART_BOARD size.
@@ -90,6 +90,17 @@ const clampViewBounds = () => {
     setWorkspaceBounds();
 };
 
+const _resizeCrosshair = () => {
+    if (getDragCrosshairLayer() && getDragCrosshairLayer().dragCrosshair) {
+        getDragCrosshairLayer().dragCrosshair.scale(
+            20 / getDragCrosshairLayer().dragCrosshair.bounds.width / paper.view.zoom);
+    }
+    if (getBackgroundGuideLayer() && getBackgroundGuideLayer().dragCrosshair) {
+        getBackgroundGuideLayer().dragCrosshair.scale(
+            20 / getBackgroundGuideLayer().dragCrosshair.bounds.width / paper.view.zoom);
+    }
+}
+
 // Zoom keeping a project-space point fixed.
 // This article was helpful http://matthiasberth.com/tech/stable-zoom-and-pan-in-paperjs
 const zoomOnFixedPoint = (deltaZoom, fixedPoint) => {
@@ -112,6 +123,7 @@ const zoomOnFixedPoint = (deltaZoom, fixedPoint) => {
 
     setWorkspaceBounds(true /* clipEmpty */);
     clampViewBounds();
+    _resizeCrosshair();
 };
 
 // Zoom keeping the selection center (if any) fixed.
@@ -136,6 +148,7 @@ const zoomOnSelection = deltaZoom => {
 
 const resetZoom = () => {
     paper.project.view.zoom = .5;
+    _resizeCrosshair();
     clampViewBounds();
 };
 

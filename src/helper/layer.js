@@ -179,12 +179,14 @@ const _makeBackgroundPaper = function (width, height, color) {
 // Helper function for drawing a crosshair
 const _makeCrosshair = function (opacity, parent) {
     paper.project.importSVG(costumeAnchorIcon, {
+        applyMatrix: false,
         onLoad: function (item) {
             item.position = new paper.Point(ART_BOARD_WIDTH / 2, ART_BOARD_HEIGHT / 2);
             item.guide = true;
             item.locked = true;
             item.opacity = opacity;
             item.parent = parent;
+            parent.dragCrosshair = item;
         }
     });
 };
