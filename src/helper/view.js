@@ -1,6 +1,6 @@
 import paper from '@scratch/paper';
 import {getAllRootItems, getSelectedRootItems} from './selection';
-import {getBackgroundGuideLayer, getDragCrosshairLayer, getRaster} from './layer';
+import {CROSSHAIR_SIZE, getBackgroundGuideLayer, getDragCrosshairLayer, getRaster} from './layer';
 import {getHitBounds} from './bitmap';
 
 // Vectors are imported and exported at SVG_ART_BOARD size.
@@ -93,11 +93,11 @@ const clampViewBounds = () => {
 const _resizeCrosshair = () => {
     if (getDragCrosshairLayer() && getDragCrosshairLayer().dragCrosshair) {
         getDragCrosshairLayer().dragCrosshair.scale(
-            20 / getDragCrosshairLayer().dragCrosshair.bounds.width / paper.view.zoom);
+            CROSSHAIR_SIZE / getDragCrosshairLayer().dragCrosshair.bounds.width / paper.view.zoom);
     }
     if (getBackgroundGuideLayer() && getBackgroundGuideLayer().dragCrosshair) {
         getBackgroundGuideLayer().dragCrosshair.scale(
-            20 / getBackgroundGuideLayer().dragCrosshair.bounds.width / paper.view.zoom);
+            CROSSHAIR_SIZE / getBackgroundGuideLayer().dragCrosshair.bounds.width / paper.view.zoom);
     }
 }
 

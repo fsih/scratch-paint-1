@@ -3,6 +3,8 @@ import log from '../log/log';
 import {ART_BOARD_WIDTH, ART_BOARD_HEIGHT, MAX_WORKSPACE_BOUNDS} from './view';
 import costumeAnchorIcon from './icons/costume-anchor.svg';
 
+const CROSSHAIR_SIZE = 28;
+
 const _getLayer = function (layerString) {
     for (const layer of paper.project.layers) {
         if (layer.data && layer.data[layerString]) {
@@ -187,6 +189,7 @@ const _makeCrosshair = function (opacity, parent) {
             item.opacity = opacity;
             item.parent = parent;
             parent.dragCrosshair = item;
+            item.scale(CROSSHAIR_SIZE / item.bounds.width / paper.view.zoom);
         }
     });
 };
@@ -234,6 +237,7 @@ const setupLayers = function () {
 };
 
 export {
+    CROSSHAIR_SIZE,
     createCanvas,
     hideGuideLayers,
     showGuideLayers,

@@ -4,13 +4,14 @@ import keyMirror from 'keymirror';
 import {getSelectedRootItems} from '../selection';
 import {getGuideColor, removeBoundsPath, removeBoundsHandles} from '../guides';
 import {getGuideLayer} from '../layer';
-import selectionAnchorIcon from '../icons/selection-anchor.svg';
+import selectionAnchorIcon from '../icons/selection-anchor-expanded.svg';
 
 import Cursors from '../../lib/cursors';
 import ScaleTool from './scale-tool';
 import RotateTool from './rotate-tool';
 import MoveTool from './move-tool';
 
+const SELECTION_ANCHOR_SIZE = 20;
 /** SVG for the rotation icon on the bounding box */
 const ARROW_PATH = 'M19.28,1.09C19.28.28,19,0,18.2,0c-1.67,0-3.34,0-5,0-.34,0-.88.24-1,.47a1.4,1.4,' +
     '0,0,0,.36,1.08,15.27,15.27,0,0,0,1.46,1.36A6.4,6.4,0,0,1,6.52,4,5.85,5.85,0,0,1,5.24,3,15.27,15.27,' +
@@ -238,7 +239,7 @@ class BoundingBoxTool {
 
         if (anchorIcon) {
             anchorIcon.visible = true;
-            anchorIcon.scale(20 / paper.view.zoom / anchorIcon.bounds.width);
+            anchorIcon.scale(SELECTION_ANCHOR_SIZE / paper.view.zoom / anchorIcon.bounds.width);
             anchorIcon.position = rect.center;
         }
 
