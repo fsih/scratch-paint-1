@@ -225,6 +225,7 @@ class BoundingBoxTool {
             this.boundsPath.addChild(this.boundsRect);
             if (anchorIcon) {
                 this.boundsPath.addChild(anchorIcon);
+                this.boundsPath.selectionAnchor = anchorIcon;
             }
             this._modeMap[BoundingBoxModes.MOVE].setBoundsPath(this.boundsPath);
         }
