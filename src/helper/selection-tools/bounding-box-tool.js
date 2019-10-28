@@ -3,7 +3,7 @@ import keyMirror from 'keymirror';
 
 import {getSelectedRootItems} from '../selection';
 import {getGuideColor, removeBoundsPath, removeBoundsHandles} from '../guides';
-import {getGuideLayer} from '../layer';
+import {getGuideLayer, setGuideItem} from '../layer';
 import selectionAnchorIcon from '../icons/selection-anchor-expanded.svg';
 
 import Cursors from '../../lib/cursors';
@@ -62,8 +62,7 @@ class BoundingBoxTool {
                 anchorIcon = item;
                 item.visible = false;
                 item.parent = getGuideLayer();
-                item.locked = true;
-                item.guide = true;
+                setGuideItem(item);
             }
         });
     }

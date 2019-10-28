@@ -1,6 +1,7 @@
 import paper from '@scratch/paper';
 import log from '../log/log';
 import {ART_BOARD_WIDTH, ART_BOARD_HEIGHT, MAX_WORKSPACE_BOUNDS} from './view';
+import {isGroupItem} from './item';
 import costumeAnchorIcon from './icons/costume-anchor.svg';
 
 const CROSSHAIR_SIZE = 28;
@@ -75,6 +76,16 @@ const getGuideLayer = function () {
     }
     return layer;
 };
+
+const setGuideItem = function (item) {
+    item.locked = true;
+    item.guide = true;
+    if (isGroupItem(item)) {
+        for (let i = 0; i < item.children.length; i++) {
+            setGuideItem(item.children[i])
+        }
+    }
+}
 
 /**
  * Removes the guide layers, e.g. for purposes of exporting the image. Must call showGuideLayers to re-add them.
@@ -184,12 +195,11 @@ const _makeCrosshair = function (opacity, parent) {
         applyMatrix: false,
         onLoad: function (item) {
             item.position = new paper.Point(ART_BOARD_WIDTH / 2, ART_BOARD_HEIGHT / 2);
-            item.guide = true;
-            item.locked = true;
             item.opacity = opacity;
             item.parent = parent;
             parent.dragCrosshair = item;
             item.scale(CROSSHAIR_SIZE / item.bounds.width / paper.view.zoom);
+            setGuideItem(item);
         }
     });
 };
@@ -246,5 +256,6 @@ export {
     getBackgroundGuideLayer,
     clearRaster,
     getRaster,
+    setGuideItem,
     setupLayers
 };
