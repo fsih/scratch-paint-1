@@ -13,6 +13,7 @@ const SVG_ART_BOARD_WIDTH = 480;
 const SVG_ART_BOARD_HEIGHT = 360;
 const ART_BOARD_WIDTH = SVG_ART_BOARD_WIDTH * 2;
 const ART_BOARD_HEIGHT = SVG_ART_BOARD_HEIGHT * 2;
+const CENTER = new paper.Point(ART_BOARD_WIDTH / 2, ART_BOARD_HEIGHT / 2);
 const PADDING_PERCENT = 25; // Padding as a percent of the max of width/height of the sprite
 const BUFFER = 50; // Number of pixels of allowance around objects at the edges of the workspace
 const MIN_RATIO = .125; // Zoom in to at least 1/8 of the screen. This way you don't end up incredibly
@@ -186,6 +187,7 @@ const zoomToFit = isBitmap => {
 export {
     ART_BOARD_HEIGHT,
     ART_BOARD_WIDTH,
+    CENTER,
     SVG_ART_BOARD_WIDTH,
     SVG_ART_BOARD_HEIGHT,
     MAX_DIMENSION,

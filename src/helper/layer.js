@@ -1,6 +1,6 @@
 import paper from '@scratch/paper';
 import log from '../log/log';
-import {ART_BOARD_WIDTH, ART_BOARD_HEIGHT, MAX_WORKSPACE_BOUNDS} from './view';
+import {ART_BOARD_WIDTH, ART_BOARD_HEIGHT, CENTER, MAX_WORKSPACE_BOUNDS} from './view';
 import {isGroupItem} from './item';
 import costumeAnchorIcon from './icons/costume-anchor.svg';
 
@@ -42,7 +42,7 @@ const clearRaster = function () {
     raster.parent = layer;
     raster.guide = true;
     raster.locked = true;
-    raster.position = new paper.Point(ART_BOARD_WIDTH / 2, ART_BOARD_HEIGHT / 2);
+    raster.position = CENTER;
 };
 
 const getRaster = function () {
@@ -194,7 +194,7 @@ const _makeCrosshair = function (opacity, parent) {
     paper.project.importSVG(costumeAnchorIcon, {
         applyMatrix: false,
         onLoad: function (item) {
-            item.position = new paper.Point(ART_BOARD_WIDTH / 2, ART_BOARD_HEIGHT / 2);
+            item.position = CENTER;
             item.opacity = opacity;
             item.parent = parent;
             parent.dragCrosshair = item;
@@ -218,12 +218,12 @@ const _makeBackgroundGuideLayer = function () {
     
     const vWorkspaceBounds = new paper.Shape.Rectangle(MAX_WORKSPACE_BOUNDS);
     vWorkspaceBounds.fillColor = '#ECF1F9';
-    vWorkspaceBounds.position = new paper.Point(ART_BOARD_WIDTH / 2, ART_BOARD_HEIGHT / 2);
+    vWorkspaceBounds.position = CENTER;
     vWorkspaceBounds.guide = true;
     vWorkspaceBounds.locked = true;
 
     const vBackground = _makeBackgroundPaper(120, 90, '#F9F9F9');
-    vBackground.position = new paper.Point(ART_BOARD_WIDTH / 2, ART_BOARD_HEIGHT / 2);
+    vBackground.position = CENTER;
     vBackground.scaling = new paper.Point(8, 8);
     vBackground.guide = true;
     vBackground.locked = true;

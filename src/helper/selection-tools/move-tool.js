@@ -2,8 +2,8 @@ import paper from '@scratch/paper';
 import Modes from '../../lib/modes';
 import {isGroup} from '../group';
 import {isCompoundPathItem, getRootItem} from '../item';
-import {snapDeltaToAngle} from '../math';
-import {getActionBounds} from '../view';
+import {checkPointsClose, snapDeltaToAngle} from '../math';
+import {CENTER, getActionBounds} from '../view';
 import {clearSelection, cloneSelection, getSelectedLeafItems, getSelectedRootItems, setItemSelection}
     from '../selection';
 import {getDragCrosshairLayer} from '../layer';
@@ -118,6 +118,9 @@ class MoveTool {
                 item.position = item.data.origPos.add(snapDeltaToAngle(dragVector, Math.PI / 4));
             } else {
                 item.position = item.data.origPos.add(dragVector);
+                if (checkPointsClose(item.position, CENTER, 2 / paper.view.zoom /* threshold */)) {
+                    item.position = CENTER;
+                }
             }
         }
 
