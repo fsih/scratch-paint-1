@@ -7,6 +7,10 @@ import {CENTER, getActionBounds} from '../view';
 import {clearSelection, cloneSelection, getSelectedLeafItems, getSelectedRootItems, setItemSelection}
     from '../selection';
 import {getDragCrosshairLayer} from '../layer';
+
+/** Snap to align selection center to rotation center within this distance */
+const SNAPPING_THRESHOLD = 4;
+
 /**
  * Tool to handle dragging an item to reposition it in a selection mode.
  */
@@ -23,6 +27,7 @@ class MoveTool {
         this.setSelectedItems = setSelectedItems;
         this.clearSelectedItems = clearSelectedItems;
         this.selectedItems = null;
+        this.selectionCenter = null;
         this.onUpdateImage = onUpdateImage;
         this.switchToTextTool = switchToTextTool;
         this.boundsPath = null;
@@ -66,7 +71,19 @@ class MoveTool {
             this._select(item, true, hitProperties.subselect);
         }
         if (hitProperties.clone) cloneSelection(hitProperties.subselect, this.onUpdateImage);
+
         this.selectedItems = this.mode === Modes.RESHAPE ? getSelectedLeafItems() : getSelectedRootItems();
+
+        let selectionBounds;
+        for (const item of this.selectedItems) {
+            if (!selectionBounds) {
+                selectionBounds = item.bounds;
+            } else {
+                selectionBounds = selectionBounds.unite(item.bounds);
+            }
+        }
+        this.selectionCenter = selectionBounds.center;
+
         if (this.boundsPath) {
             this.selectedItems.push(this.boundsPath);
         }
@@ -101,11 +118,21 @@ class MoveTool {
     }
     onMouseDrag (event) {
         const point = event.point;
-        const bounds = getActionBounds();
+        const actionBounds = getActionBounds();
+
+        point.x = Math.max(actionBounds.left, Math.min(point.x, actionBounds.right));
+        point.y = Math.max(actionBounds.top, Math.min(point.y, actionBounds.bottom));
         
-        point.x = Math.max(bounds.left, Math.min(point.x, bounds.right));
-        point.y = Math.max(bounds.top, Math.min(point.y, bounds.bottom));
         const dragVector = point.subtract(event.downPoint);
+        let snapVector;
+
+        // Snapping to align center. Only in select mode, because only select shows a center
+        // crosshair to line up.
+        if (!event.modifiers.shift && this.mode === Modes.SELECT) {
+            if (checkPointsClose(this.selectionCenter.add(dragVector), CENTER, SNAPPING_THRESHOLD / paper.view.zoom /* threshold */)) {
+                snapVector = CENTER.subtract(this.selectionCenter);
+            }
+        }
 
         for (const item of this.selectedItems) {
             // add the position of the item before the drag started
@@ -114,15 +141,15 @@ class MoveTool {
                 item.data.origPos = item.position;
             }
 
-            if (event.modifiers.shift) {
+            if (snapVector) {
+                item.position = item.data.origPos.add(snapVector);
+            } else if (event.modifiers.shift) {
                 item.position = item.data.origPos.add(snapDeltaToAngle(dragVector, Math.PI / 4));
             } else {
                 item.position = item.data.origPos.add(dragVector);
-                if (checkPointsClose(item.position, CENTER, 2 / paper.view.zoom /* threshold */)) {
-                    item.position = CENTER;
-                }
             }
         }
+
 
         // Show the center crosshair above the selected item while dragging. This makes it easier to center sprites.
         // Yes, we're calling it once per drag event, but it's better than having the crosshair pop up
@@ -139,6 +166,7 @@ class MoveTool {
             item.data.origPos = null;
         }
         this.selectedItems = null;
+        this.selectionCenter = null;
 
         if (moved) {
             this.onUpdateImage();
