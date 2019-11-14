@@ -75,11 +75,11 @@ class MoveTool {
         this.selectedItems = this.mode === Modes.RESHAPE ? getSelectedLeafItems() : getSelectedRootItems();
 
         let selectionBounds;
-        for (const item of this.selectedItems) {
-            if (!selectionBounds) {
-                selectionBounds = item.bounds;
+        for (const selectedItem of this.selectedItems) {
+            if (selectionBounds) {
+                selectionBounds = selectionBounds.unite(selectedItem.bounds);
             } else {
-                selectionBounds = selectionBounds.unite(item.bounds);
+                selectionBounds = selectedItem.bounds;
             }
         }
         this.selectionCenter = selectionBounds.center;
@@ -129,7 +129,11 @@ class MoveTool {
         // Snapping to align center. Only in select mode, because only select shows a center
         // crosshair to line up.
         if (!event.modifiers.shift && this.mode === Modes.SELECT) {
-            if (checkPointsClose(this.selectionCenter.add(dragVector), CENTER, SNAPPING_THRESHOLD / paper.view.zoom /* threshold */)) {
+            if (checkPointsClose(
+                this.selectionCenter.add(dragVector),
+                CENTER,
+                SNAPPING_THRESHOLD / paper.view.zoom /* threshold */)) {
+
                 snapVector = CENTER.subtract(this.selectionCenter);
             }
         }
