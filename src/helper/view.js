@@ -149,8 +149,9 @@ const zoomOnSelection = deltaZoom => {
 
 const resetZoom = () => {
     paper.project.view.zoom = .5;
-    _resizeCrosshair();
+    setWorkspaceBounds(true /* clipEmpty */);
     clampViewBounds();
+    _resizeCrosshair();
 };
 
 const pan = (dx, dy) => {
