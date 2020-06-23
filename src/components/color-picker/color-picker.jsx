@@ -19,7 +19,6 @@ import fillRadialIcon from './icons/fill-radial-enabled.svg';
 import fillSolidIcon from './icons/fill-solid-enabled.svg';
 import fillVertGradientIcon from './icons/fill-vert-gradient-enabled.svg';
 import swapIcon from './icons/swap.svg';
-import Modes from '../../lib/modes';
 import {getColorName, getColorRGB} from '../../lib/colors';
 
 const hsvToHex = (h, s, v) =>
@@ -181,67 +180,80 @@ class ColorPickerComponent extends React.Component {
                         )}
                     </div>
                 ) : null}
-                {this.props.colors ?
-                    <div className={classNames(styles.swatches, styles.colorSwatches)}>
-                        {this.props.colors.map(color => {
-                            const activeColor = this.props.colorIndex ? this.props.color2 : this.props.color;
-                            return (<div
-                                key={color}
-                                role="img"
-                                alt={getColorName(color)}
-                                title={getColorName(color)}
-                                className={classNames({
-                                    [styles.swatch]: true,
-                                    [styles.activeSwatch]: this.props.colorsMatch(activeColor, getColorRGB(color))
-                                })}
-                                style={{
-                                    backgroundColor: parseColor(getColorRGB(color)).hex
-                                }}
-                                onClick={swatchClickFactory(getColorRGB(color))}
+                <div className={styles.colorSwatchesContainer}>
+                    <div className={styles.swatchRow}>
+                        <div
+                            className={classNames({
+                                [styles.clickable]: true,
+                                [styles.swatch]: true,
+                                [styles.activeSwatch]:
+                                    (this.props.colorIndex === 0 && this.props.color === null) ||
+                                    (this.props.colorIndex === 1 && this.props.color2 === null)
+                            })}
+                            onClick={this.props.onTransparent}
+                        >
+                            <img
+                                className={styles.swatchIcon}
+                                draggable={false}
+                                src={noFillIcon}
                             />
-                            );
-                        })}
-                        <div className={styles.swatches}>
-                            {this.props.mode === Modes.BIT_LINE ||
-                                this.props.mode === Modes.BIT_RECT ||
-                                this.props.mode === Modes.BIT_OVAL ||
-                                this.props.mode === Modes.BIT_TEXT ? null :
-                                (<div
+                        </div>
+                        {this.props.row1Colors ?
+                            this.props.row1Colors.map(color => {
+                                const activeColor = this.props.colorIndex ? this.props.color2 : this.props.color;
+                                return (<div
+                                    key={color}
+                                    role="img"
+                                    alt={getColorName(color)}
+                                    title={getColorName(color)}
                                     className={classNames({
-                                        [styles.clickable]: true,
                                         [styles.swatch]: true,
-                                        [styles.activeSwatch]:
-                                            (this.props.colorIndex === 0 && this.props.color === null) ||
-                                            (this.props.colorIndex === 1 && this.props.color2 === null)
+                                        [styles.activeSwatch]: this.props.colorsMatch(activeColor, getColorRGB(color))
                                     })}
-                                    onClick={this.props.onTransparent}
-                                >
-                                    <img
-                                        className={styles.swatchIcon}
-                                        draggable={false}
-                                        src={noFillIcon}
-                                    />
-                                </div>)
-                            }
-                        </div>
-                        <div className={styles.swatches}>
-                            <div
-                                className={classNames({
-                                    [styles.clickable]: true,
-                                    [styles.swatch]: true,
-                                    [styles.activeSwatch]: this.props.isEyeDropping
-                                })}
-                                onClick={this.props.onActivateEyeDropper}
-                            >
-                                <img
-                                    className={styles.swatchIcon}
-                                    draggable={false}
-                                    src={eyeDropperIcon}
+                                    style={{
+                                        backgroundColor: parseColor(getColorRGB(color)).hex
+                                    }}
+                                    onClick={swatchClickFactory(getColorRGB(color))}
                                 />
-                            </div>
+                                );
+                            }) : null}
+                    </div>
+                    <div className={styles.swatchRow}>
+                        <div
+                            className={classNames({
+                                [styles.clickable]: true,
+                                [styles.swatch]: true,
+                                [styles.activeSwatch]: this.props.isEyeDropping
+                            })}
+                            onClick={this.props.onActivateEyeDropper}
+                        >
+                            <img
+                                className={styles.swatchIcon}
+                                draggable={false}
+                                src={eyeDropperIcon}
+                            />
                         </div>
-                    </div> :
-                    null}
+                        {this.props.row2Colors ?
+                            this.props.row2Colors.map(color => {
+                                const activeColor = this.props.colorIndex ? this.props.color2 : this.props.color;
+                                return (<div
+                                    key={color}
+                                    role="img"
+                                    alt={getColorName(color)}
+                                    title={getColorName(color)}
+                                    className={classNames({
+                                        [styles.swatch]: true,
+                                        [styles.activeSwatch]: this.props.colorsMatch(activeColor, getColorRGB(color))
+                                    })}
+                                    style={{
+                                        backgroundColor: parseColor(getColorRGB(color)).hex
+                                    }}
+                                    onClick={swatchClickFactory(getColorRGB(color))}
+                                />
+                                );
+                            }) : null}
+                    </div>
+                </div>
                 <div className={styles.row}>
                     <div className={styles.rowHeader}>
                         <span className={styles.labelName}>
@@ -299,7 +311,6 @@ class ColorPickerComponent extends React.Component {
                     </div>
                     <div className={styles.rowSlider}>
                         <Slider
-                            lastSlider
                             background={this._makeBackground('brightness')}
                             value={this.props.brightness}
                             onChange={this.props.onBrightnessChange}
@@ -315,14 +326,12 @@ ColorPickerComponent.propTypes = {
     brightness: PropTypes.number.isRequired,
     color: PropTypes.string,
     color2: PropTypes.string,
-    colors: PropTypes.arrayOf(PropTypes.string).isRequired,
     colorsMatch: PropTypes.func.isRequired,
     colorIndex: PropTypes.number.isRequired,
     gradientType: PropTypes.oneOf(Object.keys(GradientTypes)).isRequired,
     hue: PropTypes.number.isRequired,
     intl: intlShape.isRequired,
     isEyeDropping: PropTypes.bool.isRequired,
-    mode: PropTypes.oneOf(Object.keys(Modes)),
     onActivateEyeDropper: PropTypes.func.isRequired,
     onBrightnessChange: PropTypes.func.isRequired,
     onChangeGradientTypeHorizontal: PropTypes.func.isRequired,
@@ -336,6 +345,8 @@ ColorPickerComponent.propTypes = {
     onSwap: PropTypes.func,
     onSwatch: PropTypes.func.isRequired,
     onTransparent: PropTypes.func.isRequired,
+    row1Colors: PropTypes.arrayOf(PropTypes.string),
+    row2Colors: PropTypes.arrayOf(PropTypes.string),
     rtl: PropTypes.bool.isRequired,
     saturation: PropTypes.number.isRequired,
     shouldShowGradientTools: PropTypes.bool.isRequired

@@ -146,7 +146,8 @@ class ColorPicker extends React.Component {
                 brightness={this.state.brightness}
                 color={this.props.color}
                 color2={this.props.color2}
-                colors={this.props.colors}
+                row1Colors={this.props.row1Colors}
+                row2Colors={this.props.row2Colors}
                 colorsMatch={this.colorsMatch}
                 colorIndex={this.props.colorIndex}
                 gradientType={this.props.gradientType}
@@ -177,7 +178,6 @@ class ColorPicker extends React.Component {
 ColorPicker.propTypes = {
     color: PropTypes.string,
     color2: PropTypes.string,
-    colors: PropTypes.arrayOf(PropTypes.string).isRequired,
     colorIndex: PropTypes.number.isRequired,
     gradientType: PropTypes.oneOf(Object.keys(GradientTypes)).isRequired,
     isEyeDropping: PropTypes.bool.isRequired,
@@ -189,6 +189,8 @@ ColorPicker.propTypes = {
     onSelectColor2: PropTypes.func.isRequired,
     onSwap: PropTypes.func,
     rtl: PropTypes.bool.isRequired,
+    row1Colors: PropTypes.arrayOf(PropTypes.string),
+    row2Colors: PropTypes.arrayOf(PropTypes.string),
     shouldShowGradientTools: PropTypes.bool.isRequired
 };
 

@@ -14,7 +14,7 @@ import {setSelectedItems} from '../reducers/selected-items';
 import Modes from '../lib/modes';
 import Formats from '../lib/format';
 import {isBitmap} from '../lib/format';
-import {getAllColors} from '../lib/colors';
+import {getRow1Colors, getRow2Colors} from '../lib/colors';
 import GradientTypes from '../lib/gradient-types';
 
 import FillColorIndicatorComponent from '../components/fill-color-indicator.jsx';
@@ -110,7 +110,8 @@ class FillColorIndicator extends React.Component {
         return (
             <FillColorIndicatorComponent
                 {...this.props}
-                colors={getAllColors()}
+                row1Colors={getRow1Colors()}
+                row2Colors={getRow2Colors()}
                 onChangeFillColor={this.handleChangeFillColor}
                 onChangeGradientType={this.handleChangeGradientType}
                 onCloseFillColor={this.handleCloseFillColor}
@@ -129,7 +130,6 @@ const mapStateToProps = state => ({
     format: state.scratchPaint.format,
     gradientType: state.scratchPaint.color.gradientType,
     isEyeDropping: state.scratchPaint.color.eyeDropper.active,
-    mode: state.scratchPaint.mode,
     shouldShowGradientTools: state.scratchPaint.mode === Modes.SELECT ||
         state.scratchPaint.mode === Modes.RESHAPE ||
         state.scratchPaint.mode === Modes.FILL ||

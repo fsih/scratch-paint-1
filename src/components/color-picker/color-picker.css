@@ -4,7 +4,7 @@
 :global(.Popover-body) {
     background: white;
     border: 1px solid #ddd;
-    width: 224px;
+    width: 240px;
     padding: 4px;
     border-radius: 4px;
     padding: 4px;
@@ -55,15 +55,16 @@
     margin-right: 8px;
 }
 
-.swatches {
-    margin: 8px;
-    display: flex;
-    flex-wrap: wrap;
+.color-swatches-container {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    margin-left: 8px;
+    margin-right: 8px;
 }
 
-.color-swatches {
-    margin-top: 16px;
-    margin-bottom:16px;
+.swatch-row {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .swatch {
@@ -95,8 +96,9 @@
 }
 
 .swatch-icon {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1rem;
+    height: 1rem;
+    padding: 0.25rem;
 }
 
 .inactive-gradient {
