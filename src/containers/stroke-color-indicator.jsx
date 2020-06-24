@@ -6,7 +6,6 @@ import {changeStrokeColor} from '../reducers/stroke-color';
 import {changeStrokeWidth} from '../reducers/stroke-width';
 import {openStrokeColor, closeStrokeColor} from '../reducers/modals';
 import Modes from '../lib/modes';
-import {getRow1Colors, getRow2Colors} from '../lib/colors';
 import Formats from '../lib/format';
 import {isBitmap} from '../lib/format';
 
@@ -55,8 +54,6 @@ class StrokeColorIndicator extends React.Component {
         return (
             <StrokeColorIndicatorComponent
                 {...this.props}
-                row1Colors={getRow1Colors()}
-                row2Colors={getRow2Colors()}
                 onChangeStrokeColor={this.handleChangeStrokeColor}
                 onCloseStrokeColor={this.handleCloseStrokeColor}
             />
