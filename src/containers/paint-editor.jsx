@@ -10,6 +10,8 @@ import SelectionHOC from '../hocs/selection-hoc.jsx';
 import UndoHOC from '../hocs/undo-hoc.jsx';
 import UpdateImageHOC from '../hocs/update-image-hoc.jsx';
 
+import {changeFillColor} from '../reducers/fill-color';
+import {clearGradient} from '../reducers/selection-gradient-type';
 import {changeMode} from '../reducers/modes';
 import {changeFormat} from '../reducers/format';
 import {clearSelectedItems, setSelectedItems} from '../reducers/selected-items';
@@ -311,6 +313,8 @@ class PaintEditor extends React.Component {
                 canRedo={this.props.shouldShowRedo}
                 canUndo={this.props.shouldShowUndo}
                 canvas={this.state.canvas}
+                color={this.props.fillColor}
+                color2={this.props.fillColor2}
                 colorInfo={this.state.colorInfo}
                 format={this.props.format}
                 image={this.props.image}
@@ -325,6 +329,7 @@ class PaintEditor extends React.Component {
                 setTextArea={this.setTextArea}
                 textArea={this.state.textArea}
                 zoomLevelId={this.props.zoomLevelId}
+                onChangeColor={this.props.onChangeFillColor}
                 onRedo={this.props.onRedo}
                 onSwitchToBitmap={this.props.handleSwitchToBitmap}
                 onSwitchToVector={this.props.handleSwitchToVector}
@@ -343,6 +348,8 @@ PaintEditor.propTypes = {
     changeColorToEyeDropper: PropTypes.func,
     changeMode: PropTypes.func.isRequired,
     clearSelectedItems: PropTypes.func.isRequired,
+    color: PropTypes.string,
+    color2: PropTypes.string,
     format: PropTypes.oneOf(Object.keys(Formats)), // Internal, up-to-date data format
     handleSwitchToBitmap: PropTypes.func.isRequired,
     handleSwitchToVector: PropTypes.func.isRequired,
@@ -355,6 +362,7 @@ PaintEditor.propTypes = {
     isEyeDropping: PropTypes.bool,
     mode: PropTypes.oneOf(Object.keys(Modes)).isRequired,
     name: PropTypes.string,
+    onChangeFillColor: PropTypes.func.isRequired,
     onDeactivateEyeDropper: PropTypes.func.isRequired,
     onKeyPress: PropTypes.func.isRequired,
     onRedo: PropTypes.func.isRequired,
@@ -380,6 +388,8 @@ PaintEditor.propTypes = {
 
 const mapStateToProps = state => ({
     changeColorToEyeDropper: state.scratchPaint.color.eyeDropper.callback,
+    color: state.scratchPaint.color.fillColor,
+    color2: state.scratchPaint.color.fillColor2,
     format: state.scratchPaint.format,
     isEyeDropping: state.scratchPaint.color.eyeDropper.active,
     mode: state.scratchPaint.mode,
@@ -407,6 +417,10 @@ const mapDispatchToProps = dispatch => ({
     },
     setSelectedItems: format => {
         dispatch(setSelectedItems(getSelectedLeafItems(), isBitmap(format)));
+    },
+    onChangeFillColor: (fillColor) => {
+        dispatch(clearGradient());
+        dispatch(changeFillColor(fillColor));
     },
     onDeactivateEyeDropper: () => {
         // set redux values to default for eye dropper reducer

@@ -32,6 +32,7 @@ import ReshapeMode from '../../containers/reshape-mode.jsx';
 import SelectMode from '../../containers/select-mode.jsx';
 import StrokeColorIndicatorComponent from '../../containers/stroke-color-indicator.jsx';
 import StrokeWidthIndicatorComponent from '../../containers/stroke-width-indicator.jsx';
+import Swatches from '../../containers/swatches.jsx';
 import TextMode from '../../containers/text-mode.jsx';
 
 import Formats from '../../lib/format';
@@ -260,6 +261,11 @@ const PaintEditorComponent = props => (
                                 </span>
                             </Button> : null
                     }
+                    <Swatches
+                        color={props.fillColor}
+                        color2={props.fillColor2}
+                        onChangeColor={props.onChangeColor}
+                    />
                     {/* Zoom controls */}
                     <InputGroup className={styles.zoomControls}>
                         <ButtonGroup>
@@ -308,6 +314,8 @@ PaintEditorComponent.propTypes = {
     canRedo: PropTypes.func.isRequired,
     canUndo: PropTypes.func.isRequired,
     canvas: PropTypes.instanceOf(Element),
+    color: PropTypes.string,
+    color2: PropTypes.string,
     colorInfo: Loupe.propTypes.colorInfo,
     format: PropTypes.oneOf(Object.keys(Formats)),
     image: PropTypes.oneOfType([
@@ -319,6 +327,7 @@ PaintEditorComponent.propTypes = {
     intl: intlShape,
     isEyeDropping: PropTypes.bool,
     name: PropTypes.string,
+    onChangeColor: PropTypes.func.isRequired,
     onRedo: PropTypes.func.isRequired,
     onSwitchToBitmap: PropTypes.func.isRequired,
     onSwitchToVector: PropTypes.func.isRequired,
