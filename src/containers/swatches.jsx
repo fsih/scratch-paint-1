@@ -11,9 +11,6 @@ import SwatchesComponent from '../components/color-picker/swatches.jsx';
 import {MIXED} from '../helper/style-path';
 import {colorStringToHsv, getRow1Colors, getRow2Colors} from '../lib/colors';
 
-// Important! This component ignores new color props except when isEyeDropping
-// This is to make the HSV <=> RGB conversion stable. The sliders manage their
-// own changes until unmounted or color changes with props.isEyeDropping = true.
 class Swatches extends React.Component {
     constructor (props) {
         super(props);
