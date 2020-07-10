@@ -7,7 +7,7 @@ import React from 'react';
 import {clearSelectedItems} from '../reducers/selected-items';
 import {activateEyeDropper} from '../reducers/eye-dropper';
 
-import SwatchesComponent from '../components/color-picker/swatches.jsx';
+import SwatchesComponent from '../components/swatches/swatches.jsx';
 import {MIXED} from '../helper/style-path';
 import {colorStringToHsv, getRow1Colors, getRow2Colors} from '../lib/colors';
 

@@ -8,7 +8,7 @@ import parseColor from 'parse-color';
 import Slider from '../forms/slider.jsx';
 import LabeledIconButton from '../labeled-icon-button/labeled-icon-button.jsx';
 import styles from './color-picker.css';
-import swatchStyles from './swatches.css';
+import swatchStyles from '../swatches/swatches.css';
 import GradientTypes from '../../lib/gradient-types';
 import {MIXED} from '../../helper/style-path';
 import Swatches from '../../containers/swatches.jsx';

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import styles from './swatches.css';
 
-import eyeDropperIcon from './icons/eye-dropper.svg';
+import eyeDropperIcon from '../color-picker/icons/eye-dropper.svg';
 import noFillIcon from '../color-button/no-fill.svg';
 import {getColorName, getColorHex} from '../../lib/colors';
 
