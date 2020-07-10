@@ -313,8 +313,8 @@ class PaintEditor extends React.Component {
                 canRedo={this.props.shouldShowRedo}
                 canUndo={this.props.shouldShowUndo}
                 canvas={this.state.canvas}
-                color={this.props.fillColor}
-                color2={this.props.fillColor2}
+                color={this.props.color}
+                color2={this.props.color2}
                 colorInfo={this.state.colorInfo}
                 format={this.props.format}
                 image={this.props.image}

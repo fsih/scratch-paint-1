@@ -15,6 +15,7 @@ const SwatchesComponent = props => {
     const colorToSwatchMap = color => {
         const activeColor = props.colorIndex ? props.color2 : props.color;
         const colorHex = getColorHex(color);
+        const colorsMatch = props.colorsMatch(activeColor, colorHex);
         return (<div
             key={color}
             role="img"
@@ -23,7 +24,8 @@ const SwatchesComponent = props => {
             className={classNames({
                 [styles.swatch]: true,
                 [styles.smallSwatch]: props.small,
-                [styles.activeSwatch]: props.colorsMatch(activeColor, colorHex)
+                [styles.activeSwatch]: colorsMatch,
+                [styles.smallActiveSwatch]: colorsMatch && props.small
             })}
             style={{
                 backgroundColor: colorHex
@@ -33,6 +35,10 @@ const SwatchesComponent = props => {
         );
     };
 
+    const isTransparent = () => 
+        (props.colorIndex === 0 && props.color === null) ||
+        (props.colorIndex === 1 && props.color2 === null);
+
     return (
         <div className={props.containerStyle || ''} >
             <div className={styles.swatchRow}>
@@ -41,9 +47,8 @@ const SwatchesComponent = props => {
                         [styles.clickable]: true,
                         [styles.swatch]: true,
                         [styles.smallSwatch]: props.small,
-                        [styles.activeSwatch]:
-                            (props.colorIndex === 0 && props.color === null) ||
-                            (props.colorIndex === 1 && props.color2 === null)
+                        [styles.activeSwatch]: isTransparent(),
+                        [styles.smallActiveSwatch]: isTransparent() && props.small,
                     })}
                     onClick={props.onTransparent}
                 >
@@ -64,7 +69,8 @@ const SwatchesComponent = props => {
                         [styles.clickable]: true,
                         [styles.swatch]: true,
                         [styles.smallSwatch]: props.small,
-                        [styles.activeSwatch]: props.isEyeDropping
+                        [styles.activeSwatch]: props.isEyeDropping,
+                        [styles.smallActiveSwatch]: props.isEyeDropping && props.small,
                     })}
                     onClick={props.onActivateEyeDropper}
                 >

@@ -264,8 +264,8 @@ const PaintEditorComponent = props => (
                     <div className={styles.row}>
                         <Swatches
                             small
-                            color={props.fillColor}
-                            color2={props.fillColor2}
+                            color={props.color}
+                            color2={props.color2}
                             containerStyle={styles.colorSwatchesContainer}
                             onChangeColor={props.onChangeColor}
                         />
