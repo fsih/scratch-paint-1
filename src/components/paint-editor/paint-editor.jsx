@@ -261,50 +261,53 @@ const PaintEditorComponent = props => (
                                 </span>
                             </Button> : null
                     }
-                    <Swatches
-                        color={props.fillColor}
-                        color2={props.fillColor2}
-                        containerStyle={styles.colorSwatchesContainer}
-                        onChangeColor={props.onChangeColor}
-                    />
-                    {/* Zoom controls */}
-                    <InputGroup className={styles.zoomControls}>
-                        <ButtonGroup>
-                            <Button
-                                className={styles.buttonGroupButton}
-                                onClick={props.onZoomOut}
-                            >
-                                <img
-                                    alt="Zoom Out"
-                                    className={styles.buttonGroupButtonIcon}
-                                    draggable={false}
-                                    src={zoomOutIcon}
-                                />
-                            </Button>
-                            <Button
-                                className={styles.buttonGroupButton}
-                                onClick={props.onZoomReset}
-                            >
-                                <img
-                                    alt="Zoom Reset"
-                                    className={styles.buttonGroupButtonIcon}
-                                    draggable={false}
-                                    src={zoomResetIcon}
-                                />
-                            </Button>
-                            <Button
-                                className={styles.buttonGroupButton}
-                                onClick={props.onZoomIn}
-                            >
-                                <img
-                                    alt="Zoom In"
-                                    className={styles.buttonGroupButtonIcon}
-                                    draggable={false}
-                                    src={zoomInIcon}
-                                />
-                            </Button>
-                        </ButtonGroup>
-                    </InputGroup>
+                    <div className={styles.row}>
+                        <Swatches
+                            small
+                            color={props.fillColor}
+                            color2={props.fillColor2}
+                            containerStyle={styles.colorSwatchesContainer}
+                            onChangeColor={props.onChangeColor}
+                        />
+                        {/* Zoom controls */}
+                        <InputGroup className={styles.zoomControls}>
+                            <ButtonGroup>
+                                <Button
+                                    className={styles.buttonGroupButton}
+                                    onClick={props.onZoomOut}
+                                >
+                                    <img
+                                        alt="Zoom Out"
+                                        className={styles.buttonGroupButtonIcon}
+                                        draggable={false}
+                                        src={zoomOutIcon}
+                                    />
+                                </Button>
+                                <Button
+                                    className={styles.buttonGroupButton}
+                                    onClick={props.onZoomReset}
+                                >
+                                    <img
+                                        alt="Zoom Reset"
+                                        className={styles.buttonGroupButtonIcon}
+                                        draggable={false}
+                                        src={zoomResetIcon}
+                                    />
+                                </Button>
+                                <Button
+                                    className={styles.buttonGroupButton}
+                                    onClick={props.onZoomIn}
+                                >
+                                    <img
+                                        alt="Zoom In"
+                                        className={styles.buttonGroupButtonIcon}
+                                        draggable={false}
+                                        src={zoomInIcon}
+                                    />
+                                </Button>
+                            </ButtonGroup>
+                        </InputGroup>
+                    </div>
                 </div>
             </div>
         </div>

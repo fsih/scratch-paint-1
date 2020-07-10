@@ -57,6 +57,7 @@ class Swatches extends React.Component {
                 colorsMatch={this.colorsMatch}
                 colorIndex={this.props.colorIndex}
                 isEyeDropping={this.props.isEyeDropping}
+                small={this.props.small}
                 onActivateEyeDropper={this.handleActivateEyeDropper}
                 onSwatch={this.handleSwatch}
                 onTransparent={this.handleTransparent}
@@ -71,6 +72,7 @@ Swatches.propTypes = {
     colorIndex: PropTypes.number.isRequired,
     containerStyle: PropTypes.string,
     isEyeDropping: PropTypes.bool.isRequired,
+    small: PropTypes.bool,
     onActivateEyeDropper: PropTypes.func.isRequired,
     onChangeColor: PropTypes.func.isRequired
 };

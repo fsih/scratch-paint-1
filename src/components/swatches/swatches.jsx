@@ -22,6 +22,7 @@ const SwatchesComponent = props => {
             title={getColorName(color)}
             className={classNames({
                 [styles.swatch]: true,
+                [styles.smallSwatch]: props.small,
                 [styles.activeSwatch]: props.colorsMatch(activeColor, colorHex)
             })}
             style={{
@@ -39,6 +40,7 @@ const SwatchesComponent = props => {
                     className={classNames({
                         [styles.clickable]: true,
                         [styles.swatch]: true,
+                        [styles.smallSwatch]: props.small,
                         [styles.activeSwatch]:
                             (props.colorIndex === 0 && props.color === null) ||
                             (props.colorIndex === 1 && props.color2 === null)
@@ -46,7 +48,10 @@ const SwatchesComponent = props => {
                     onClick={props.onTransparent}
                 >
                     <img
-                        className={styles.swatchIcon}
+                        className={classNames({
+                            [styles.swatchIcon]: true,
+                            [styles.smallSwatchIcon]: props.small
+                        })}
                         draggable={false}
                         src={noFillIcon}
                     />
@@ -58,12 +63,16 @@ const SwatchesComponent = props => {
                     className={classNames({
                         [styles.clickable]: true,
                         [styles.swatch]: true,
+                        [styles.smallSwatch]: props.small,
                         [styles.activeSwatch]: props.isEyeDropping
                     })}
                     onClick={props.onActivateEyeDropper}
                 >
                     <img
-                        className={styles.swatchIcon}
+                        className={classNames({
+                            [styles.swatchIcon]: true,
+                            [styles.smallSwatchIcon]: props.small
+                        })}
                         draggable={false}
                         src={eyeDropperIcon}
                     />
@@ -84,8 +93,12 @@ SwatchesComponent.propTypes = {
     colorsMatch: PropTypes.func.isRequired, // eslint-disable-line react/no-unused-prop-types
     containerStyle: PropTypes.string,
     isEyeDropping: PropTypes.bool.isRequired,
+    small: PropTypes.bool,
     row1Colors: PropTypes.arrayOf(PropTypes.string),
     row2Colors: PropTypes.arrayOf(PropTypes.string)
 };
 
+SwatchesComponent.defaultProps = {
+    small: false
+};
 export default SwatchesComponent;
