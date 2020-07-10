@@ -51,6 +51,7 @@ class Swatches extends React.Component {
             <SwatchesComponent
                 color={this.props.color}
                 color2={this.props.color2}
+                containerStyle={this.props.containerStyle}
                 row1Colors={getRow1Colors()}
                 row2Colors={getRow2Colors()}
                 colorsMatch={this.colorsMatch}
@@ -68,6 +69,7 @@ Swatches.propTypes = {
     color: PropTypes.string,
     color2: PropTypes.string,
     colorIndex: PropTypes.number.isRequired,
+    containerStyle: PropTypes.string,
     isEyeDropping: PropTypes.bool.isRequired,
     onActivateEyeDropper: PropTypes.func.isRequired,
     onChangeColor: PropTypes.func.isRequired

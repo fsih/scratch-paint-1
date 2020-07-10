@@ -264,6 +264,7 @@ const PaintEditorComponent = props => (
                     <Swatches
                         color={props.fillColor}
                         color2={props.fillColor2}
+                        containerStyle={styles.colorSwatchesContainer}
                         onChangeColor={props.onChangeColor}
                     />
                     {/* Zoom controls */}

@@ -179,6 +179,7 @@ class ColorPickerComponent extends React.Component {
                 <Swatches
                     color={this.props.color}
                     color2={this.props.color2}
+                    containerStyle={styles.colorSwatchesContainer}
                     onChangeColor={this.props.onChangeColor}
                 />
                 <div className={styles.row}>

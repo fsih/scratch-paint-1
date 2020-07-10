@@ -33,7 +33,7 @@ const SwatchesComponent = props => {
     };
 
     return (
-        <div className={styles.colorSwatchesContainer}>
+        <div className={props.containerStyle || ''} >
             <div className={styles.swatchRow}>
                 <div
                     className={classNames({
@@ -82,6 +82,7 @@ SwatchesComponent.propTypes = {
     color2: PropTypes.string,
     colorIndex: PropTypes.number.isRequired,
     colorsMatch: PropTypes.func.isRequired, // eslint-disable-line react/no-unused-prop-types
+    containerStyle: PropTypes.string,
     isEyeDropping: PropTypes.bool.isRequired,
     row1Colors: PropTypes.arrayOf(PropTypes.string),
     row2Colors: PropTypes.arrayOf(PropTypes.string)
