@@ -24,6 +24,7 @@ import {getSelectedLeafItems} from '../helper/selection';
 import {convertToBitmap, convertToVector} from '../helper/bitmap';
 import {resetZoom, zoomOnSelection, OUTERMOST_ZOOM_LEVEL} from '../helper/view';
 import EyeDropperTool from '../helper/tools/eye-dropper';
+import {applyFillColorToSelection} from '../helper/style-path';
 
 import Modes from '../lib/modes';
 import {BitmapModes, VectorModes} from '../lib/modes';
@@ -89,7 +90,8 @@ class PaintEditor extends React.Component {
             'handleSetSelectedItems',
             'handleZoomIn',
             'handleZoomOut',
-            'handleZoomReset'
+            'handleZoomReset',
+            'handleChangeFillColor'
         ]);
         this.state = {
             canvas: null,
@@ -236,6 +238,16 @@ class PaintEditor extends React.Component {
     handleSetSelectedItems () {
         this.props.setSelectedItems(this.props.format);
     }
+    handleChangeFillColor (newColor) {
+        const hasChanged = applyFillColorToSelection(
+            newColor,
+            this.props.colorIndex,
+            true /* isSolidGradient */,
+            isBitmap(this.props.format),
+            this.props.textEditTarget);
+        this.props.onChangeFillColor(newColor);
+        if (hasChanged) this.props.onUpdateImage();
+    }
     setCanvas (canvas) {
         this.setState({canvas: canvas});
         this.canvas = canvas;
@@ -329,7 +341,7 @@ class PaintEditor extends React.Component {
                 setTextArea={this.setTextArea}
                 textArea={this.state.textArea}
                 zoomLevelId={this.props.zoomLevelId}
-                onChangeColor={this.props.onChangeFillColor}
+                onChangeColor={this.handleChangeFillColor}
                 onRedo={this.props.onRedo}
                 onSwitchToBitmap={this.props.handleSwitchToBitmap}
                 onSwitchToVector={this.props.handleSwitchToVector}
