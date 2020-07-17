@@ -15,17 +15,31 @@ class Swatches extends React.Component {
     constructor (props) {
         super(props);
         bindAll(this, [
-            'colorsMatch',
+            'colorMatchesActiveColor',
             'handleSwatch',
             'handleTransparent',
             'handleActivateEyeDropper'
         ]);
     }
-    colorsMatch (colorString1, colorString2) {
+    colorMatchesActiveColor (colorString2) {
+        let activeColor;
+        if (this.props.isStrokeColor) {
+            if (this.props.colorIndex === 1) {
+                activeColor = this.props.strokeColor2;
+            } else {
+                activeColor = this.props.strokeColor;
+            }
+        } else if (!this.props.isStrokeColor) {
+            if (this.props.colorIndex === 1) {
+                activeColor = this.props.fillColor2;
+            } else {
+                activeColor = this.props.fillColor;
+            }
+        }
         // transparent or mixed
-        if (!colorString1 || colorString1 === MIXED) return colorString1 === colorString2;
+        if (!activeColor || activeColor === MIXED) return activeColor === colorString2;
 
-        const [hue1, saturation1, brightness1] = colorStringToHsv(colorString1);
+        const [hue1, saturation1, brightness1] = colorStringToHsv(activeColor);
         const [hue2, saturation2, brightness2] = colorStringToHsv(colorString2);
         return Math.abs(hue1 - hue2) < .5 &&
             Math.abs(saturation1 - saturation2) < .5 &&
@@ -49,14 +63,15 @@ class Swatches extends React.Component {
     render () {
         return (
             <SwatchesComponent
-                color={this.props.color}
-                color2={this.props.color2}
+                color={this.props.isStrokeColor ? this.props.strokeColor : this.props.fillColor}
+                color2={this.props.isStrokeColor ? this.props.strokeColor2 : this.props.fillColor2}
                 containerStyle={this.props.containerStyle}
                 row1Colors={getRow1Colors()}
                 row2Colors={getRow2Colors()}
-                colorsMatch={this.colorsMatch}
+                colorMatchesActiveColor={this.colorMatchesActiveColor}
                 colorIndex={this.props.colorIndex}
                 isEyeDropping={this.props.isEyeDropping}
+                isStrokeColor={this.props.isStrokeColor}
                 small={this.props.small}
                 onActivateEyeDropper={this.handleActivateEyeDropper}
                 onSwatch={this.handleSwatch}
@@ -67,19 +82,26 @@ class Swatches extends React.Component {
 }
 
 Swatches.propTypes = {
-    color: PropTypes.string,
-    color2: PropTypes.string,
     colorIndex: PropTypes.number.isRequired,
     containerStyle: PropTypes.string,
+    fillColor: PropTypes.string,
+    fillColor2: PropTypes.string,
     isEyeDropping: PropTypes.bool.isRequired,
+    isStrokeColor: PropTypes.bool.isRequired,
     small: PropTypes.bool,
+    strokeColor: PropTypes.string,
+    strokeColor2: PropTypes.string,
     onActivateEyeDropper: PropTypes.func.isRequired,
     onChangeColor: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
     colorIndex: state.scratchPaint.fillMode.colorIndex,
-    isEyeDropping: state.scratchPaint.color.eyeDropper.active
+    isEyeDropping: state.scratchPaint.color.eyeDropper.active,
+    fillColor: state.scratchPaint.color.fillColor,
+    fillColor2: state.scratchPaint.color.fillColor2,
+    strokeColor: state.scratchPaint.color.strokeColor,
+    strokeColor2: state.scratchPaint.color.strokeColor2
 });
 
 const mapDispatchToProps = dispatch => ({

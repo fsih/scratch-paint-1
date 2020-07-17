@@ -99,7 +99,7 @@ class ColorPicker extends React.Component {
                 colorIndex={this.props.colorIndex}
                 gradientType={this.props.gradientType}
                 hue={this.state.hue}
-                isEyeDropping={this.props.isEyeDropping}
+                isStrokeColor={this.props.isStrokeColor}
                 mode={this.props.mode}
                 rtl={this.props.rtl}
                 saturation={this.state.saturation}
@@ -126,6 +126,7 @@ ColorPicker.propTypes = {
     colorIndex: PropTypes.number.isRequired,
     gradientType: PropTypes.oneOf(Object.keys(GradientTypes)).isRequired,
     isEyeDropping: PropTypes.bool.isRequired,
+    isStrokeColor: PropTypes.bool.isRequired,
     mode: PropTypes.oneOf(Object.keys(Modes)),
     onChangeColor: PropTypes.func.isRequired,
     onChangeGradientType: PropTypes.func,
@@ -136,7 +137,13 @@ ColorPicker.propTypes = {
     shouldShowGradientTools: PropTypes.bool.isRequired
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
+    color: ownProps.isStrokeColor ?
+        state.scratchPaint.color.strokeColor :
+        state.scratchPaint.color.fillColor,
+    color2: ownProps.isStrokeColor ?
+        state.scratchPaint.color.strokeColor2 :
+        state.scratchPaint.color.fillColor2,
     colorIndex: state.scratchPaint.fillMode.colorIndex,
     isEyeDropping: state.scratchPaint.color.eyeDropper.active,
     mode: state.scratchPaint.mode,

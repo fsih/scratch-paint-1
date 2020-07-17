@@ -25,8 +25,7 @@ const StrokeColorIndicatorComponent = props => (
         <Popover
             body={
                 <ColorPicker
-                    color={props.strokeColor}
-                    color2={null}
+                    isStrokeColor
                     gradientType={GradientTypes.SOLID}
                     shouldShowGradientTools={false}
                     // @todo handle stroke gradient

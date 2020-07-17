@@ -264,8 +264,7 @@ const PaintEditorComponent = props => (
                     <div className={styles.row}>
                         <Swatches
                             small
-                            color={props.color}
-                            color2={props.color2}
+                            isStrokeColor={props.isStrokeColor}
                             containerStyle={styles.colorSwatchesContainer}
                             onChangeColor={props.onChangeColor}
                         />
@@ -318,8 +317,6 @@ PaintEditorComponent.propTypes = {
     canRedo: PropTypes.func.isRequired,
     canUndo: PropTypes.func.isRequired,
     canvas: PropTypes.instanceOf(Element),
-    color: PropTypes.string,
-    color2: PropTypes.string,
     colorInfo: Loupe.propTypes.colorInfo,
     format: PropTypes.oneOf(Object.keys(Formats)),
     image: PropTypes.oneOfType([
@@ -330,6 +327,7 @@ PaintEditorComponent.propTypes = {
     imageId: PropTypes.string,
     intl: intlShape,
     isEyeDropping: PropTypes.bool,
+    isStrokeColor: PropTypes.bool.isRequired,
     name: PropTypes.string,
     onChangeColor: PropTypes.func.isRequired,
     onRedo: PropTypes.func.isRequired,

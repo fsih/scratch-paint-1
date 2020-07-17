@@ -177,8 +177,7 @@ class ColorPickerComponent extends React.Component {
                     </div>
                 ) : null}
                 <Swatches
-                    color={this.props.color}
-                    color2={this.props.color2}
+                    isStrokeColor={this.props.isStrokeColor}
                     containerStyle={styles.colorSwatchesContainer}
                     onChangeColor={this.props.onChangeColor}
                 />
@@ -258,7 +257,7 @@ ColorPickerComponent.propTypes = {
     gradientType: PropTypes.oneOf(Object.keys(GradientTypes)).isRequired,
     hue: PropTypes.number.isRequired,
     intl: intlShape.isRequired,
-    isEyeDropping: PropTypes.bool.isRequired,
+    isStrokeColor: PropTypes.bool.isRequired,
     onBrightnessChange: PropTypes.func.isRequired,
     onChangeColor: PropTypes.func.isRequired,
     onChangeGradientTypeHorizontal: PropTypes.func.isRequired,

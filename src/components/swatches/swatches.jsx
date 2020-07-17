@@ -13,9 +13,8 @@ const SwatchesComponent = props => {
         () => props.onSwatch(color);
 
     const colorToSwatchMap = color => {
-        const activeColor = props.colorIndex ? props.color2 : props.color;
         const colorHex = getColorHex(color);
-        const colorsMatch = props.colorsMatch(activeColor, colorHex);
+        const colorsMatch = props.colorMatchesActiveColor(colorHex);
         return (<div
             key={color}
             role="img"
@@ -35,7 +34,7 @@ const SwatchesComponent = props => {
         );
     };
 
-    const isTransparent = () => 
+    const isTransparent = () =>
         (props.colorIndex === 0 && props.color === null) ||
         (props.colorIndex === 1 && props.color2 === null);
 
@@ -48,7 +47,7 @@ const SwatchesComponent = props => {
                         [styles.swatch]: true,
                         [styles.smallSwatch]: props.small,
                         [styles.activeSwatch]: isTransparent(),
-                        [styles.smallActiveSwatch]: isTransparent() && props.small,
+                        [styles.smallActiveSwatch]: isTransparent() && props.small
                     })}
                     onClick={props.onTransparent}
                 >
@@ -70,7 +69,7 @@ const SwatchesComponent = props => {
                         [styles.swatch]: true,
                         [styles.smallSwatch]: props.small,
                         [styles.activeSwatch]: props.isEyeDropping,
-                        [styles.smallActiveSwatch]: props.isEyeDropping && props.small,
+                        [styles.smallActiveSwatch]: props.isEyeDropping && props.small
                     })}
                     onClick={props.onActivateEyeDropper}
                 >
@@ -96,7 +95,7 @@ SwatchesComponent.propTypes = {
     color: PropTypes.string,
     color2: PropTypes.string,
     colorIndex: PropTypes.number.isRequired,
-    colorsMatch: PropTypes.func.isRequired, // eslint-disable-line react/no-unused-prop-types
+    colorMatchesActiveColor: PropTypes.func.isRequired, // eslint-disable-line react/no-unused-prop-types
     containerStyle: PropTypes.string,
     isEyeDropping: PropTypes.bool.isRequired,
     small: PropTypes.bool,

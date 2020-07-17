@@ -26,9 +26,8 @@ const FillColorIndicatorComponent = props => (
         <Popover
             body={
                 <ColorPicker
-                    color={props.fillColor}
-                    color2={props.fillColor2}
                     gradientType={props.gradientType}
+                    isStrokeColor={false}
                     shouldShowGradientTools={props.shouldShowGradientTools}
                     onChangeColor={props.onChangeFillColor}
                     onChangeGradientType={props.onChangeGradientType}
